@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Classification System</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .flowchart {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .step {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-left: 6px solid #3498db;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .step:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .step-header {
+            font-weight: bold;
+            font-size: 1.1em;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .question {
+            font-weight: 600;
+            color: #34495e;
+            margin: 10px 0;
+        }
+
+        .path-indicator {
+            font-size: 0.9em;
+            color: #7f8c8d;
+            margin: 5px 0;
+        }
+
+        .outcome {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            color: white;
+            font-weight: 600;
+            margin: 3px;
+            font-size: 0.85em;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Color coding for content types */
+        .social-media { background: linear-gradient(45deg, #e74c3c, #c0392b); }
+        .website { background: linear-gradient(45deg, #3498db, #2980b9); }
+        .news { background: linear-gradient(45deg, #9b59b6, #8e44ad); }
+        .marketing { background: linear-gradient(45deg, #e67e22, #d35400); }
+        .review { background: linear-gradient(45deg, #f39c12, #e67e22); }
+        .legal { background: linear-gradient(45deg, #27ae60, #229954); }
+        .instructions { background: linear-gradient(45deg, #16a085, #138d75); }
+        .subtitles { background: linear-gradient(45deg, #2c3e50, #34495e); }
+        .literary { background: linear-gradient(45deg, #8e44ad, #71368a); }
+        .medical { background: linear-gradient(45deg, #e91e63, #ad1457); }
+        .encyclopedia { background: linear-gradient(45deg, #795548, #5d4037); }
+        .didactic { background: linear-gradient(45deg, #607d8b, #455a64); }
+        .notice { background: linear-gradient(45deg, #ff9800, #f57c00); }
+        .digital { background: linear-gradient(45deg, #009688, #00695c); }
+        .other { background: linear-gradient(45deg, #9e9e9e, #616161); }
+        .fan-subtitles { background: linear-gradient(45deg, #424242, #212121); }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .category-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+        }
+
+        .category-card.social-media:before { background: linear-gradient(45deg, #e74c3c, #c0392b); }
+        .category-card.website:before { background: linear-gradient(45deg, #3498db, #2980b9); }
+        .category-card.news:before { background: linear-gradient(45deg, #9b59b6, #8e44ad); }
+        .category-card.marketing:before { background: linear-gradient(45deg, #e67e22, #d35400); }
+        .category-card.review:before { background: linear-gradient(45deg, #f39c12, #e67e22); }
+        .category-card.legal:before { background: linear-gradient(45deg, #27ae60, #229954); }
+        .category-card.instructions:before { background: linear-gradient(45deg, #16a085, #138d75); }
+        .category-card.subtitles:before { background: linear-gradient(45deg, #2c3e50, #34495e); }
+        .category-card.literary:before { background: linear-gradient(45deg, #8e44ad, #71368a); }
+        .category-card.medical:before { background: linear-gradient(45deg, #e91e63, #ad1457); }
+        .category-card.encyclopedia:before { background: linear-gradient(45deg, #795548, #5d4037); }
+        .category-card.didactic:before { background: linear-gradient(45deg, #607d8b, #455a64); }
+        .category-card.notice:before { background: linear-gradient(45deg, #ff9800, #f57c00); }
+        .category-card.digital:before { background: linear-gradient(45deg, #009688, #00695c); }
+        .category-card.other:before { background: linear-gradient(45deg, #9e9e9e, #616161); }
+        .category-card.fan-subtitles:before { background: linear-gradient(45deg, #424242, #212121); }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .category-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .subcategory-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .subcategory {
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            color: white;
+            font-weight: 500;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            color: #2c3e50;
+            text-align: center;
+            margin: 40px 0 20px 0;
+            position: relative;
+        }
+
+        .section-title:after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            margin: 10px auto;
+            border-radius: 2px;
+        }
+
+        .starting-section {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border-left: 6px solid #ff6b9d;
+        }
+
+        .digital-section {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border-left: 6px solid #009688;
+        }
+
+        .description {
+            font-style: italic;
+            color: rgba(0,0,0,0.7);
+            margin: 5px 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .categories-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Text Classification System</h1>
+        
+        <div class="flowchart">
+            <div class="step starting-section">
+                <div class="step-header">Starting Point</div>
+                <div><strong>Rule 1:</strong> Is this digital content?</div>
+                <div class="path-indicator">
+                    <strong>If Yes:</strong> Go to Rule 2 (Content that requires some form of technology to view)<br>
+                    <strong>If No:</strong> Go to Rule 4
+                </div>
+            </div>
+
+            <div class="step digital-section">
+                <div class="step-header">Rule 2: Is this content exclusively online?</div>
+                <div class="question">Content visible only on the web</div>
+                <div class="path-indicator">
+                    <strong>If Yes:</strong> Go to Rule 3 (website homepage, forum post, search query)<br>
+                    <strong>If No:</strong> Go to Rule 5
+                </div>
+            </div>
+
+            <div class="step digital-section">
+                <div class="step-header">Rule 3: Was this authored by an authority?</div>
+                <div class="question">Operating on a more 'professional' scale than an individual person</div>
+                <div class="path-indicator">
+                    <strong>If Yes:</strong> → <span class="outcome website">WEBSITE</span> (Go to Rule 100)<br>
+                    <strong>If No:</strong> Go to Rule 6 (social media post, forum post, social media subtitles)
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-header">Rule 4: Where would you expect to see this type of content?</div>
+                <div class="path-indicator">
+                    <span class="outcome social-media">Social Media</span> → Rule 200 |
+                    <span class="outcome website">Website</span> → Rule 100 |
+                    <span class="outcome news">News</span> → Rule 300 |
+                    <span class="outcome marketing">Marketing</span> → Rule 400 |
+                    <span class="outcome review">Review</span> → Rule 500 |
+                    <span class="outcome legal">Legal</span> → Rule 600 |
+                    <span class="outcome instructions">Instructions</span> → Rule 700 |
+                    <span class="outcome subtitles">Subtitles</span> → Rule 800 |
+                    <span class="outcome literary">Literary</span> → Rule 900 |
+                    <span class="outcome medical">Medical</span> → Rule 1000 |
+                    <span class="outcome encyclopedia">Encyclopedia</span> → Rule 1100 |
+                    <span class="outcome other">Other</span> → Rule 1200
+                </div>
+            </div>
+
+            <div class="step digital-section">
+                <div class="step-header">Rule 5: What type of digital content is it?</div>
+                <div class="path-indicator">
+                    <span class="outcome digital">Software</span> → Digital - Software |
+                    <span class="outcome digital">Video Game</span> → Digital - Video Game Interface |
+                    <span class="outcome digital">Archive</span> → Digital - Archive |
+                    <span class="outcome subtitles">Subtitles</span> → Rule 800
+                </div>
+            </div>
+
+            <div class="step digital-section">
+                <div class="step-header">Rule 6: Does it contain some form of peer-to-peer communication?</div>
+                <div class="question">Can be explicit/implicit, doesn't need visual confirmation</div>
+                <div class="path-indicator">
+                    <strong>If Yes:</strong> → <span class="outcome social-media">SOCIAL</span> (Go to Rule 200)<br>
+                    <strong>If No:</strong> Go to Rule 7 (writer to reader communication)
+                </div>
+            </div>
+
+            <div class="step digital-section">
+                <div class="step-header">Rule 7: Is this a collection of texts?</div>
+                <div class="question">Can be implicit, not necessary for multiple texts in sample</div>
+                <div class="path-indicator">
+                    <strong>If Yes:</strong> → <span class="outcome digital">Digital - Archive</span><br>
+                    <strong>If No:</strong> Go to Rule 4 (Singular text: recipe, short story, speech)
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Social Media Classification (Rules 200-299)</h2>
+        <div class="flowchart">
+            <div class="step">
+                <div class="step-header">Rule 200: Search results, feed or post?</div>
+                <div class="path-indicator">
+                    <span class="outcome social-media">Search results</span> → Social Media - Search Results (Several short texts, unrelated but same topic)<br>
+                    <span class="outcome social-media">Feed</span> → Rule 201 (Several texts, unrelated, different topics)<br>
+                    <span class="outcome social-media">Post</span> → Rule 202 (One text)
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-header">Rule 201: Are posts from same user?</div>
+                <div class="path-indicator">
+                    <strong>If Yes:</strong> → <span class="outcome social-media">Social Media - Profile</span> (Usernames, multiple posts continuing from each other)<br>
+                    <strong>If No:</strong> → <span class="outcome social-media">Social Media - Feed</span>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-header">Rule 202: Someone asking question expecting answer?</div>
+                <div class="path-indicator">
+                    <strong>If Yes:</strong> → <span class="outcome website">Website - Forum</span><br>
+                    <strong>If No:</strong> → <span class="outcome social-media">Social Media - Post</span>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Website Classification (Rules 100-199)</h2>
+        <div class="flowchart">
+            <div class="step">
+                <div class="step-header">Rule 100: What type of text is it?</div>
+                <div class="path-indicator">
+                    <span class="outcome website">Forum</span> → Website - Forum (Question expecting answer on niche topic)<br>
+                    <span class="outcome website">FAQ</span> → Website - FAQ (Series of commonly asked questions and answers)<br>
+                    <span class="outcome website">Blog</span> → Website - Blog (Personal/professional, longer form, single author)<br>
+                    <span class="outcome website">Search query</span> → Website - Search Query (Short text, often question)<br>
+                    Products/services → Rule 101 | Instructional → Rule 102<br>
+                    <span class="outcome website">Fiction</span> → Website - Fiction<br>
+                    <span class="outcome website">Creative Nonfiction</span> → Website - Creative Nonfiction (Real events using literary techniques)<br>
+                    <span class="outcome website">Listings</span> → Website - Index (List of categories, not specific products)<br>
+                    <span class="outcome website">Homepage</span> → Website - Homepage (Landing page with general info and links)<br>
+                    <span class="outcome website">Template</span> → Website - Boilerplate (Text that doesn't differ between websites)<br>
+                    Other → <span class="outcome website">Website - Article</span>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-header">Rule 101: Specific products with prices or categories?</div>
+                <div class="path-indicator">
+                    Specific products → Rule 103<br>
+                    Categories/groups → Rule 104
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-header">Rule 102: Uses second person 'you do this'?</div>
+                <div class="path-indicator">
+                    <strong>If Yes:</strong> → <span class="outcome website">Website - How-to</span><br>
+                    <strong>If No:</strong> → <span class="outcome website">Website - Online Help</span>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-header">Rule 103: Web-native features present (URLs, hyperlinks)?</div>
+                <div class="path-indicator">
+                    <strong>If Yes:</strong> → <span class="outcome website">Website - Catalogue</span><br>
+                    <strong>If No:</strong> → <span class="outcome marketing">Marketing - Product Description</span>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-header">Rule 104: Product categories or general brochure?</div>
+                <div class="path-indicator">
+                    Categories → <span class="outcome website">Website - Index</span><br>
+                    Brochure → <span class="outcome notice">Notice - Brochure</span> (General info about organization/product/service)
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title">News Classification (Rules 300-399)</h2>
+        <div class="flowchart">
+            <div class="step">
+                <div class="step-header">Rule 300: Presenting facts objectively?</div>
+                <div class="path-indicator">
+                    <strong>If Yes:</strong> → Rule 301<br>
+                    <strong>If No:</strong> → Rule 304 (Author's opinions/emotions take precedence)
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-header">Rule 301: Describing a tragedy?</div>
+                <div class="path-indicator">
+                    <strong>If Yes:</strong> → <span class="outcome news">News - Hard News</span> (Natural disaster, crime, etc.)<br>
+                    <strong>If No:</strong> → Rule 302
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-header">Rule 302: Contemporary events?</div>
+                <div class="path-indicator">
+                    <strong>If Yes:</strong> → Rule 303<br>
+                    <strong>If No:</strong> → <span class="outcome news">News - Feature Article</span>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-header">Rule 303: Light/feature content?</div>
+                <div class="path-indicator">
+                    <strong>If Yes:</strong> → <span class="outcome news">News - Feature Article</span> (Entertaining, light-hearted, human-interest OR in-depth topic coverage)<br>
+                    <strong>If No:</strong> → <span class="outcome news">News - Press Report</span>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-header">Rule 304: Primarily designed to give the author's point of view?</div>
+                <div class="path-indicator">
+                    <strong>If Yes:</strong> → <span class="outcome news">News - Opinion Piece</span><br>
+                    <strong>If No:</strong> → <span class="outcome news">News - Local Interest</span> (Can include author's opinion but primary purpose is to inform locals)
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Marketing Classification (Rules 400-499)</h2>
+        <div class="flowchart">
+            <div class="step">
+                <div class="step-header">Rule 400: Interview format?</div>
+                <div class="path-indicator">
+                    <strong>If Yes:</strong> → <span class="outcome marketing">Marketing - Interview</span><br>
+                    <strong>If No:</strong> → <span class="outcome marketing">Marketing - Product Description</span>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Review Classification (Rules 500-599)</h2>
+        <div class="flowchart">
+            <div class="step">
+                <div class="step-header">Rule 500: What's being reviewed?</div>
+                <div class="path-indicator">
+                    TV/film/book/music/game → <span class="outcome review">Review - Media Review</span><br>
+                    Product → <span class="outcome review">Review - Product Review</span><br>
+                    Service → <span class="outcome review">Review - Service Review</span><br>
+                    Experience → <span class="outcome review">Review - Experience Review</span>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Legal Classification (Rules 600-699)</h2>
+        <div class="flowchart">
+            <div class="step">
+                <div class="step-header">Rule 600: Q&A format makes up the majority of text?</div>
+                <div class="path-indicator">
+                    <strong>If Yes:</strong> → Rule 601<br>
+                    <strong>If No:</strong> → Rule 603 (Could contain some questions/answers but not majority)
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-header">Rule 601: Questions rhetorical/for marketing?</div>
+                <div class="path-indicator">
+                    <strong>If Yes:</strong> → Rule 602 (Rhetorical purpose, catching reader's attention)<br>
+                    <strong>If No:</strong> → <span class="outcome legal">Legal - FAQ</span> (Genuine questions with reasonable expectation of answer)
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-header">Rule 602: Quiz format?</div>
+                <div class="path-indicator">
+                    <strong>If Yes:</strong> → <span class="outcome legal">Legal - Quiz</span><br>
+                    <strong>If No:</strong> → <span class="outcome legal">Legal - PSA</span>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-header">Rule 603: Speech, form, legislation, or other?</div>
+                <div class="path-indicator">
+                    Speech → <span class="outcome legal">Legal - Proceedings</span><br>
+                    Form → <span class="outcome legal">Legal - Form</span><br>
+                    Legislation → <span class="outcome legal">Legal - Legislation</span><br>
+                    Other → Rule 604
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-header">Rule 604: Providing timely update on ongoing/recent work?</div>
+                <div class="path-indicator">
+                    <strong>If Yes:</strong> → Rule 605<br>
+                    <strong>If No:</strong> → Rule 608
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-header">Rule 605: Explicitly journal or magazine article?</div>
+                <div class="path-indicator">
+                    <strong>If Yes:</strong> → <span class="outcome legal">Legal - Journal Article</span><br>
+                    <strong>If No:</strong> → Rule 606
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-header">Rule 606: Aimed at the public?</div>
+                <div class="path-indicator">
+                    <strong>If Yes:</strong> → Rule 607<br>
+                    <strong>If No:</strong> → <span class="outcome legal">Legal - Report</span>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-header">Rule 607: About project or organisation?</div>
+                <div class="path-indicator">
+                    Project → <span class="outcome legal">Legal - Press Release</span><br>
+                    Organisation → <span class="outcome legal">Legal - Newsletter</span>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-header">Rule 608: Explaining how to do something or describing system?</div>
+                <div class="path-indicator">
+                    <strong>If Yes:</strong> → <span class="outcome legal">Legal - Guide</span><br>
+                    <strong>If No:</strong> → Rule 609
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-header">Rule 609: Long-term strategic plan with goals?</div>
+                <div class="path-indicator">
+                    <strong>If Yes:</strong> → <span class="outcome legal">Legal - Programme</span><br>
+                    <strong>If No:</strong> → <span class="outcome legal">Legal - Report</span>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Instructions Classification (Rules 700-799)</h2>
+        <div class="flowchart">
+            <div class="step">
+                <div class="step-header">Rule 700: Recipe format?</div>
+                <div class="path-indicator">
+                    <strong>If Yes:</strong> → <span class="outcome instructions">Instructions - Recipe</span><br>
+                    <strong>If No:</strong> → <span class="outcome notice">Notice - Guide</span>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Subtitles Classification (Rules 800-899)</h2>
+        <div class="flowchart">
+            <div class="step">
+                <div class="step-header">Rule 800: Movie/TV subtitles?</div>
+                <div class="path-indicator">
+                    <strong>If Yes:</strong> → Rule 801<br>
+                    <strong>If No:</strong> → Rule 802
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-header">Rule 801: Professional or non-professional subtitles?</div>
+                <div class="path-indicator">
+                    Professional → <span class="outcome subtitles">Subtitles - Visual Entertainment</span><br>
+                    Non-professional → <span class="outcome fan-subtitles">Fan Subtitles - Visual Entertainment</span>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-header">Rule 802: DIY/How-to video format?</div>
+                <div class="path-indicator">
+                    <strong>If Yes:</strong> → <span class="outcome subtitles">Subtitles - How-to</span><br>
+                    <strong>If No:</strong> → Rule 803
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-header">Rule 803: Interview format with Q&A?</div>
+                <div class="path-indicator">
+                    <strong>If Yes:</strong> → <span class="outcome subtitles">Subtitles - Interview</span><br>
+                    <strong>If No:</strong> → Rule 804
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-header">Rule 804: Podcast, radio or storytelling format?</div>
+                <div class="path-indicator">
+                    <strong>If Yes:</strong> → Rule 805<br>
+                    <strong>If No:</strong> → Rule 806
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-header">Rule 805: Video component likely?</div>
+                <div class="path-indicator">
+                    <strong>If Yes:</strong> → <span class="outcome subtitles">Subtitles - Visual Entertainment</span><br>
+                    <strong>If No:</strong> → <span class="outcome subtitles">Subtitles - Audio Entertainment</span>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-header">Rule 806: Speech or presentation?</div>
+                <div class="path-indicator">
+                    <strong>If Yes:</strong> → <span class="outcome subtitles">Subtitles - Talk</span><br>
+                    <strong>If No:</strong> → <span class="outcome subtitles">Subtitles - Social Media</span>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Literary Classification (Rules 900-999)</h2>
+        <div class="flowchart">
+            <div class="step">
+                <div class="step-header">Rule 900: Fictional/story-like?</div>
+                <div class="path-indicator">
+                    <strong>If Yes:</strong> → <span class="outcome literary">Literary - Fiction</span><br>
+                    <strong>If No:</strong> → <span class="outcome literary">Literary - Nonfiction</span>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Medical Classification (Rules 1000-1099)</h2>
+        <div class="flowchart">
+            <div class="step">
+                <div class="step-header">Rule 1000: For medical professionals?</div>
+                <div class="path-indicator">
+                    <strong>If Yes:</strong> → <span class="outcome medical">Medical - Review Article</span><br>
+                    <strong>If No:</strong> → <span class="outcome medical">Medical - Brochure</span>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Encyclopedia Classification (Rules 1100-1199)</h2>
+        <div class="flowchart">
+            <div class="step">
+                <div class="step-header">Rule 1100: Technical specs + history?</div>
+                <div class="path-indicator">
+                    <strong>If Yes:</strong> → <span class="outcome encyclopedia">Encyclopedia - Object Biography</span><br>
+                    <strong>If No:</strong> → Rule 1101
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-header">Rule 1101: Biographical information?</div>
+                <div class="path-indicator">
+                    <strong>If Yes:</strong> → <span class="outcome encyclopedia">Encyclopedia - Biography</span><br>
+                    <strong>If No:</strong> → <span class="outcome encyclopedia">Encyclopedia - Reference Material</span>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Other Classification (Rules 1200-1299)</h2>
+        <div class="flowchart">
+            <div class="step">
+                <div class="step-header">Rule 1200: Purpose: educating, informing, or other?</div>
+                <div class="path-indicator">
+                    Educating → Rule 1300 (Didactic)<br>
+                    Informing → Rule 1400 (Notice)<br>
+                    Other Purpose → <span class="outcome other">Other - Unclassified</span>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Didactic Classification (Rules 1300-1399)</h2>
+        <div class="flowchart">
+            <div class="step">
+                <div class="step-header">Rule 1300: Are answers provided?</div>
+                <div class="path-indicator">
+                    <strong>If Yes:</strong> → Rule 1301<br>
+                    <strong>If No:</strong> → <span class="outcome didactic">Didactic - Exam</span>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-header">Rule 1301: For study or reference purposes?</div>
+                <div class="path-indicator">
+                    Study → <span class="outcome didactic">Didactic - Study Notes</span><br>
+                    Reference → <span class="outcome encyclopedia">Encyclopedia - Reference Material</span>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Notice Classification (Rules 1400-1499)</h2>
+        <div class="flowchart">
+            <div class="step">
+                <div class="step-header">Rule 1400: Just addresses/contact information?</div>
+                <div class="path-indicator">
+                    <strong>If Yes:</strong> → <span class="outcome notice">Notice - Address</span><br>
+                    <strong>If No:</strong> → Rule 1401
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-header">Rule 1401: Memorial/obituary content?</div>
+                <div class="path-indicator">
+                    <strong>If Yes:</strong> → Rule 1402<br>
+                    <strong>If No:</strong> → <span class="outcome notice">Notice - Brochure</span>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-header">Rule 1402: Formal obituary format?</div>
+                <div class="path-indicator">
+                    <strong>If Yes:</strong> → <span class="outcome news">News - Obituary</span><br>
+                    <strong>If No:</strong> → <span class="outcome social-media">Social Media - Post</span>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Content Classifications</h2>
+        
+        <div class="categories-grid">
+            <div class="category-card social-media">
+                <div class="category-title">Social Media</div>
+                <div class="subcategory-grid">
+                    <div class="subcategory social-media">Search Results</div>
+                    <div class="subcategory social-media">Profile</div>
+                    <div class="subcategory social-media">Feed</div>
+                    <div class="subcategory social-media">Post</div>
+                </div>
+            </div>
+
+            <div class="category-card website">
+                <div class="category-title">Website</div>
+                <div class="subcategory-grid">
+                    <div class="subcategory website">Forum</div>
+                    <div class="subcategory website">FAQ</div>
+                    <div class="subcategory website">Blog</div>
+                    <div class="subcategory website">Search Query</div>
+                    <div class="subcategory website">Catalogue</div>
+                    <div class="subcategory website">How-to</div>
+                    <div class="subcategory website">Online Help</div>
+                    <div class="subcategory website">Fiction</div>
+                    <div class="subcategory website">Creative Nonfiction</div>
+                    <div class="subcategory website">Index</div>
+                    <div class="subcategory website">Homepage</div>
+                    <div class="subcategory website">Boilerplate</div>
+                    <div class="subcategory website">Article</div>
+                </div>
+            </div>
+
+            <div class="category-card news">
+                <div class="category-title">News</div>
+                <div class="subcategory-grid">
+                    <div class="subcategory news">Hard News</div>
+                    <div class="subcategory news">Feature Article</div>
+                    <div class="subcategory news">Press Report</div>
+                    <div class="subcategory news">Opinion Piece</div>
+                    <div class="subcategory news">Local Interest</div>
+                    <div class="subcategory news">Obituary</div>
+                </div>
+            </div>
+
+            <div class="category-card marketing">
+                <div class="category-title">Marketing</div>
+                <div class="subcategory-grid">
+                    <div class="subcategory marketing">Interview</div>
+                    <div class="subcategory marketing">Product Description</div>
+                </div>
+            </div>
+
+            <div class="category-card review">
+                <div class="category-title">Review</div>
+                <div class="subcategory-grid">
+                    <div class="subcategory review">Media Review</div>
+                    <div class="subcategory review">Product Review</div>
+                    <div class="subcategory review">Service Review</div>
+                    <div class="subcategory review">Experience Review</div>
+                </div>
+            </div>
+
+            <div class="category-card legal">
+                <div class="category-title">Legal</div>
+                <div class="subcategory-grid">
+                    <div class="subcategory legal">FAQ</div>
+                    <div class="subcategory legal">Quiz</div>
+                    <div class="subcategory legal">PSA</div>
+                    <div class="subcategory legal">Proceedings</div>
+                    <div class="subcategory legal">Form</div>
+                    <div class="subcategory legal">Legislation</div>
+                    <div class="subcategory legal">Journal Article</div>
+                    <div class="subcategory legal">Report</div>
+                    <div class="subcategory legal">Press Release</div>
+                    <div class="subcategory legal">Newsletter</div>
+                    <div class="subcategory legal">Guide</div>
+                    <div class="subcategory legal">Programme</div>
+                </div>
+            </div>
+
+            <div class="category-card instructions">
+                <div class="category-title">Instructions</div>
+                <div class="subcategory-grid">
+                    <div class="subcategory instructions">Recipe</div>
+                </div>
+            </div>
+
+            <div class="category-card subtitles">
+                <div class="category-title">Subtitles</div>
+                <div class="subcategory-grid">
+                    <div class="subcategory subtitles">Visual Entertainment</div>
+                    <div class="subcategory subtitles">How-to</div>
+                    <div class="subcategory subtitles">Interview</div>
+                    <div class="subcategory subtitles">Audio Entertainment</div>
+                    <div class="subcategory subtitles">Talk</div>
+                    <div class="subcategory subtitles">Social Media</div>
+                </div>
+            </div>
+
+            <div class="category-card fan-subtitles">
+                <div class="category-title">Fan Subtitles</div>
+                <div class="subcategory-grid">
+                    <div class="subcategory fan-subtitles">Visual Entertainment</div>
+                </div>
+            </div>
+
+            <div class="category-card literary">
+                <div class="category-title">Literary</div>
+                <div class="subcategory-grid">
+                    <div class="subcategory literary">Fiction</div>
+                    <div class="subcategory literary">Nonfiction</div>
+                </div>
+            </div>
+
+            <div class="category-card medical">
+                <div class="category-title">Medical</div>
+                <div class="subcategory-grid">
+                    <div class="subcategory medical">Review Article</div>
+                    <div class="subcategory medical">Brochure</div>
+                </div>
+            </div>
+
+            <div class="category-card encyclopedia">
+                <div class="category-title">Encyclopedia</div>
+                <div class="subcategory-grid">
+                    <div class="subcategory encyclopedia">Object Biography</div>
+                    <div class="subcategory encyclopedia">Biography</div>
+                    <div class="subcategory encyclopedia">Reference Material</div>
+                </div>
+            </div>
+
+            <div class="category-card didactic">
+                <div class="category-title">Didactic</div>
+                <div class="subcategory-grid">
+                    <div class="subcategory didactic">Exam</div>
+                    <div class="subcategory didactic">Study Notes</div>
+                </div>
+            </div>
+
+            <div class="category-card notice">
+                <div class="category-title">Notice</div>
+                <div class="subcategory-grid">
+                    <div class="subcategory notice">Address</div>
+                    <div class="subcategory notice">Brochure</div>
+                    <div class="subcategory notice">Guide</div>
+                </div>
+            </div>
+
+            <div class="category-card digital">
+                <div class="category-title">Digital</div>
+                <div class="subcategory-grid">
+                    <div class="subcategory digital">Software</div>
+                    <div class="subcategory digital">Video Game Interface</div>
+                    <div class="subcategory digital">Archive</div>
+                </div>
+            </div>
+
+            <div class="category-card other">
+                <div class="category-title">Other</div>
+                <div class="subcategory-grid">
+                    <div class="subcategory other">Unclassified</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
