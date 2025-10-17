@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Topic Taxonomy</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            min-height: 600px;
+        }
+
+        .panel {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .topics-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .topics-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .topics-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .topics-list::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+
+        .topics-list::-webkit-scrollbar-thumb:hover {
+            background: #764ba2;
+        }
+
+        .topic-button {
+            padding: 12px 16px;
+            background: #f5f6fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.3s ease;
+            color: #2c3e50;
+            font-weight: 500;
+            font-size: 0.95em;
+        }
+
+        .topic-button:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .topic-button.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: transparent;
+        }
+
+        .subtopics-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .subtopics-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .subtopics-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .subtopics-list::-webkit-scrollbar-thumb {
+            background: #764ba2;
+            border-radius: 10px;
+        }
+
+        .subtopic-tag {
+            padding: 10px 14px;
+            background: #f0f0f5;
+            border-left: 4px solid #667eea;
+            border-radius: 6px;
+            color: #2c3e50;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .subtopic-tag:hover {
+            background: #e8e8f5;
+            border-left-color: #764ba2;
+            transform: translateX(3px);
+        }
+
+        .placeholder {
+            color: #999;
+            font-style: italic;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        @media (max-width: 1024px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .panel {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Topic Taxonomy Browser</h1>
+        
+        <div class="content">
+            <div class="panel">
+                <h2>Topics</h2>
+                <div class="topics-list" id="topicsList"></div>
+            </div>
+
+            <div class="panel">
+                <h2 id="subtopicTitle">Select a topic</h2>
+                <div class="subtopics-list" id="subtopicsList">
+                    <div class="placeholder">Select a topic from the left to view subtopics</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const taxonomy = {
+            'History': [],
+            'Finance': ['Banking', 'Investment', 'Economic policy', 'Financial institutions'],
+            'Politics': ['Royalty', 'Military', 'War', 'Governance', 'Policy decisions', 'International relations', 'Regulatory frameworks', 'Government programs', 'EU institutional procedures', 'Political agreements', 'Rights that don\'t pertain to another category specifically', 'Ombudsman', 'Legislation', 'Decisions affecting social groups (i.e. asylum laws)'],
+            'Religion': [],
+            'Personal Relationships': ['Romance', 'Friendship', 'Conflict', 'Family'],
+            'Science': [],
+            'Technology': ['Digital systems', 'If text is about both science & technology, choose science'],
+            'Culture & Entertainment': ['Film', 'TV', 'Video games', 'Music', 'Art', 'Theatre', 'Celebrations', 'Social media', 'Celebrities', 'Myth', 'Fashion', 'Language'],
+            'Health': ['Workplace health'],
+            'Education': ['Training programs', 'Adult education', 'Language learning'],
+            'Lifestyle & Recreation': ['Hobbies', 'Sports', 'Games', 'Products', 'DIY', 'Services', 'Attractions', 'Travel, vacations, tourism', 'Pets', 'Restaurants', 'Food & drink unless discussed in a cultural context', 'Clothes', 'Beauty', 'Living standards, housing'],
+            'Nature & Environment': ['Fishing', 'Climate change', 'Sustainability', 'Animals', 'Damage to the natural world', 'Agriculture'],
+            'Society & Demographics': ['Power structures', 'Social structures', 'Crime', 'Geography', 'Demographics', 'Public opinion surveys', 'Community relations', 'Social research', 'Population studies', 'Migration patterns', 'Settlement patterns', 'Law enforcement', 'Urban planning', 'Rural development', 'Civic participation', 'Transport'],
+            'Industry & Employment': ['Logistics', 'Marketing', 'Manufacturing', 'Trade', 'Employment policies', 'Labour relations', 'Professional development', 'Workforce studies', 'Income taxes', 'Social insurance']
+        };
+
+        const topicsList = document.getElementById('topicsList');
+        const subtopicsList = document.getElementById('subtopicsList');
+        const subtopicTitle = document.getElementById('subtopicTitle');
+
+        // Populate topics in order
+        const topicsOrder = ['History', 'Finance', 'Politics', 'Religion', 'Personal Relationships', 'Science', 'Technology', 'Culture & Entertainment', 'Health', 'Education', 'Lifestyle & Recreation', 'Nature & Environment', 'Society & Demographics', 'Industry & Employment'];
+        
+        topicsOrder.forEach(topic => {
+            const button = document.createElement('button');
+            button.className = 'topic-button';
+            button.textContent = topic;
+            button.onclick = () => selectTopic(topic, button);
+            topicsList.appendChild(button);
+        });
+
+        function selectTopic(topic, buttonElement) {
+            // Update active state
+            document.querySelectorAll('.topic-button').forEach(btn => btn.classList.remove('active'));
+            buttonElement.classList.add('active');
+
+            // Update subtopics
+            subtopicTitle.textContent = topic;
+            subtopicsList.innerHTML = '';
+
+            const subtopics = taxonomy[topic];
+            if (subtopics.length === 0) {
+                subtopicsList.innerHTML = '<div class="placeholder">No subtopics available</div>';
+            } else {
+                subtopics.forEach(subtopic => {
+                    const tag = document.createElement('div');
+                    tag.className = 'subtopic-tag';
+                    tag.textContent = subtopic;
+                    subtopicsList.appendChild(tag);
+                });
+            }
+        }
+    </script>
+</body>
+</html>
