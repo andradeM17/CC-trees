@@ -209,7 +209,8 @@
             'Lifestyle & Recreation': ['Hobbies', 'Sports', 'Games', 'Products', 'DIY', 'Services', 'Attractions', 'Travel, vacations, tourism', 'Pets', 'Restaurants', 'Food & drink unless discussed in a cultural context', 'Clothes', 'Beauty', 'Living standards, housing'],
             'Nature & Environment': ['Fishing', 'Climate change', 'Sustainability', 'Animals', 'Damage to the natural world', 'Agriculture'],
             'Society & Demographics': ['Power structures', 'Social structures', 'Crime', 'Geography', 'Demographics', 'Public opinion surveys', 'Community relations', 'Social research', 'Population studies', 'Migration patterns', 'Settlement patterns', 'Law enforcement', 'Urban planning', 'Rural development', 'Civic participation', 'Transport'],
-            'Industry & Employment': ['Logistics', 'Marketing', 'Manufacturing', 'Trade', 'Employment policies', 'Labour relations', 'Professional development', 'Workforce studies', 'Income taxes', 'Social insurance']
+            'Industry & Employment': ['Logistics', 'Marketing', 'Manufacturing', 'Trade', 'Employment policies', 'Labour relations', 'Professional development', 'Workforce studies', 'Income taxes', 'Social insurance'],
+            'Other': ['Topics that don\'t fit other categories', 'Miscellaneous content', 'Uncategorizable items']
         };
 
         const topicsList = document.getElementById('topicsList');
@@ -217,7 +218,7 @@
         const subtopicTitle = document.getElementById('subtopicTitle');
 
         // Populate topics in order
-        const topicsOrder = ['History', 'Finance', 'Politics', 'Religion', 'Personal Relationships', 'Science', 'Technology', 'Culture & Entertainment', 'Health', 'Education', 'Lifestyle & Recreation', 'Nature & Environment', 'Society & Demographics', 'Industry & Employment'];
+        const topicsOrder = ['History', 'Finance', 'Politics', 'Religion', 'Personal Relationships', 'Science', 'Technology', 'Culture & Entertainment', 'Health', 'Education', 'Lifestyle & Recreation', 'Nature & Environment', 'Society & Demographics', 'Industry & Employment', 'Other'];
         
         topicsOrder.forEach(topic => {
             const button = document.createElement('button');

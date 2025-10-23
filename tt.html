@@ -89,6 +89,7 @@
         .argumentative { background: linear-gradient(45deg, #f39c12, #e67e22); }
         .expository { background: linear-gradient(45deg, #27ae60, #229954); }
         .descriptive { background: linear-gradient(45deg, #16a085, #138d75); }
+        .other { background: linear-gradient(45deg, #95a5a6, #7f8c8d); }
 
         .categories-grid {
             display: grid;
@@ -123,6 +124,7 @@
         .category-card.argumentative:before { background: linear-gradient(45deg, #f39c12, #e67e22); }
         .category-card.expository:before { background: linear-gradient(45deg, #27ae60, #229954); }
         .category-card.descriptive:before { background: linear-gradient(45deg, #16a085, #138d75); }
+        .category-card.other:before { background: linear-gradient(45deg, #95a5a6, #7f8c8d); }
 
         .category-card:hover {
             transform: translateY(-5px);
@@ -319,6 +321,7 @@
             <div class="step">
                 <div class="step-header">Step 11: Multiple Characteristics Review</div>
                 <div><strong>Action:</strong> Review multiple characteristics and choose best fit based on dominant features</div>
+                <div class="path-indicator"><strong>If no clear match:</strong> → <span class="outcome other">OTHER</span></div>
             </div>
         </div>
 
@@ -399,6 +402,17 @@
                     <li>Setting descriptions</li>
                     <li>Product specifications</li>
                     <li>Scientific observations</li>
+                </ul>
+            </div>
+
+            <div class="category-card other">
+                <div class="category-title">8. OTHER</div>
+                <div class="category-description">Texts that do not fit clearly into any specific category</div>
+                <ul class="category-examples">
+                    <li>Mixed or hybrid text types</li>
+                    <li>Experimental writing</li>
+                    <li>Abstract expressions</li>
+                    <li>Undefined content formats</li>
                 </ul>
             </div>
         </div>
