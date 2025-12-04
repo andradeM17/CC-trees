@@ -255,7 +255,7 @@
                 <div class="step-header">Rule 3: Was this authored by an authority?</div>
                 <div class="question">Operating on a more 'professional' scale than an individual person</div>
                 <div class="path-indicator">
-                    <strong>If Yes:</strong> → <span class="outcome website">WEBSITE</span> (Go to Rule 100)<br>
+                    <strong>If Yes:</strong> → <span class="outcome website">WEBSITE</span> (i.e. Would have had a specific URL) Go to Rule 100<br>
                     <strong>If No:</strong> Go to Rule 6 (social media post, forum post, social media subtitles)
                 </div>
             </div>
@@ -267,8 +267,8 @@
                     <span class="outcome website">Website</span> → Rule 100 |
                     <span class="outcome news">News</span> → Rule 300 |
                     <span class="outcome marketing">Marketing</span> → Rule 400 |
-                    <span class="outcome review">Review</span> → Rule 500 |
-                    <span class="outcome legal">Legal</span> → Rule 600 |
+                    <span class="outcome review">Review</span> (of a good or service) → Rule 500 |
+                    <span class="outcome legal">Legal</span> (includes texts from political organisations, or any legal policies) → Rule 600 |
                     <span class="outcome instructions">Instructions</span> → Rule 700 |
                     <span class="outcome subtitles">Subtitles</span> → Rule 800 |
                     <span class="outcome literary">Literary</span> → Rule 900 |
@@ -281,9 +281,9 @@
             <div class="step digital-section">
                 <div class="step-header">Rule 5: What type of digital content is it?</div>
                 <div class="path-indicator">
-                    <span class="outcome digital">Software</span> → Digital - Software |
+                    <span class="outcome digital">Software</span> → Digital - Software (E.g. help/troubleshooting guide, interface menus, sign in pages) |
                     <span class="outcome digital">Video Game</span> → Digital - Video Game Interface |
-                    <span class="outcome digital">Archive</span> → Digital - Archive |
+                    <span class="outcome digital">Archive</span> → Digital - Archive (A collection of texts, could contain some form of indexation) |
                     <span class="outcome subtitles">Subtitles</span> → Rule 800
                 </div>
             </div>
@@ -307,6 +307,58 @@
             </div>
         </div>
 
+        <h2 class="section-title">Website Classification (Rules 100-199)</h2>
+        <div class="flowchart">
+            <div class="step">
+                <div class="step-header">Rule 100: What type of text is it?</div>
+                <div class="path-indicator">
+                    <span class="outcome website">Forum</span> → Website - Forum (Question expecting answer on niche topic)<br>
+                    <span class="outcome website">FAQ</span> → Website - FAQ (Series of commonly asked questions and answers)<br>
+                    <span class="outcome website">Blog</span> → Website - Blog (Personal/professional, longer form, single author)<br>
+                    <span class="outcome website">Search query</span> → Website - Search Query (Short text, often question)<br>
+                    Products/services → Rule 101 | Instructional → Rule 102<br>
+                    <span class="outcome website">Fiction</span> → Website - Fiction<br>
+                    <span class="outcome website">Creative Nonfiction</span> → Website - Creative Nonfiction (Real events using literary techniques)<br>
+                    <span class="outcome website">Listings</span> → Website - Index (List of categories, not specific products)<br>
+                    <span class="outcome website">Homepage</span> → Website - Homepage (Landing page with general info and links, also includes About Us pages)<br>
+                    <span class="outcome website">Template</span> → Website - Boilerplate (Text that doesn't differ between websites)<br>
+                    Other → <span class="outcome website">Website - Article</span> → (Includes Wikipedia-style articles) 
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-header">Rule 101: Specific products with prices or categories?</div>
+                <div class="path-indicator">
+                    Specific products → Rule 103<br>
+                    Categories/groups → Rule 104
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-header">Rule 102: Uses second person 'you do this'?</div>
+                <div class="path-indicator">
+                    <strong>If Yes:</strong> → <span class="outcome website">Website - How-to</span> (A set of instructions for completing a task, may be designed for engagement) <br>
+                    <strong>If No:</strong> → <span class="outcome website">Website - Online Help</span>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-header">Rule 103: Web-native features present (URLs, hyperlinks)?</div>
+                <div class="path-indicator">
+                    <strong>If Yes:</strong> → <span class="outcome website">Website - Catalogue</span><br> A list of specific products
+                    <strong>If No:</strong> → <span class="outcome marketing">Marketing - Product Description</span> A description of a good or service, designed to sell it the the reader
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-header">Rule 104: Product categories or general brochure?</div>
+                <div class="path-indicator">
+                    Categories → <span class="outcome website">Website - Index</span><br> Products grouped together
+                    Brochure → <span class="outcome notice">Notice - Brochure</span> (General info about organization/product/service)
+                </div>
+            </div>
+        </div>
+
         <h2 class="section-title">Social Media Classification (Rules 200-299)</h2>
         <div class="flowchart">
             <div class="step">
@@ -322,7 +374,7 @@
                 <div class="step-header">Rule 201: Are posts from same user?</div>
                 <div class="path-indicator">
                     <strong>If Yes:</strong> → <span class="outcome social-media">Social Media - Profile</span> (Usernames, multiple posts continuing from each other)<br>
-                    <strong>If No:</strong> → <span class="outcome social-media">Social Media - Feed</span>
+                    <strong>If No:</strong> → <span class="outcome social-media">Social Media - Feed</span> Several texts, unrelated, different topics)
                 </div>
             </div>
 
@@ -331,58 +383,6 @@
                 <div class="path-indicator">
                     <strong>If Yes:</strong> → <span class="outcome website">Website - Forum</span><br>
                     <strong>If No:</strong> → <span class="outcome social-media">Social Media - Post</span>
-                </div>
-            </div>
-        </div>
-
-        <h2 class="section-title">Website Classification (Rules 100-199)</h2>
-        <div class="flowchart">
-            <div class="step">
-                <div class="step-header">Rule 100: What type of text is it?</div>
-                <div class="path-indicator">
-                    <span class="outcome website">Forum</span> → Website - Forum (Question expecting answer on niche topic)<br>
-                    <span class="outcome website">FAQ</span> → Website - FAQ (Series of commonly asked questions and answers)<br>
-                    <span class="outcome website">Blog</span> → Website - Blog (Personal/professional, longer form, single author)<br>
-                    <span class="outcome website">Search query</span> → Website - Search Query (Short text, often question)<br>
-                    Products/services → Rule 101 | Instructional → Rule 102<br>
-                    <span class="outcome website">Fiction</span> → Website - Fiction<br>
-                    <span class="outcome website">Creative Nonfiction</span> → Website - Creative Nonfiction (Real events using literary techniques)<br>
-                    <span class="outcome website">Listings</span> → Website - Index (List of categories, not specific products)<br>
-                    <span class="outcome website">Homepage (including About Us pages)</span> → Website - Homepage (Landing page with general info and links, also includes About Us pages)<br>
-                    <span class="outcome website">Template</span> → Website - Boilerplate (Text that doesn't differ between websites)<br>
-                    Other → <span class="outcome website">Website - Article (including Wikipedia-style articles)</span>
-                </div>
-            </div>
-
-            <div class="step">
-                <div class="step-header">Rule 101: Specific products with prices or categories?</div>
-                <div class="path-indicator">
-                    Specific products → Rule 103<br>
-                    Categories/groups → Rule 104
-                </div>
-            </div>
-
-            <div class="step">
-                <div class="step-header">Rule 102: Uses second person 'you do this'?</div>
-                <div class="path-indicator">
-                    <strong>If Yes:</strong> → <span class="outcome website">Website - How-to</span><br>
-                    <strong>If No:</strong> → <span class="outcome website">Website - Online Help</span>
-                </div>
-            </div>
-
-            <div class="step">
-                <div class="step-header">Rule 103: Web-native features present (URLs, hyperlinks)?</div>
-                <div class="path-indicator">
-                    <strong>If Yes:</strong> → <span class="outcome website">Website - Catalogue</span><br>
-                    <strong>If No:</strong> → <span class="outcome marketing">Marketing - Product Description</span>
-                </div>
-            </div>
-
-            <div class="step">
-                <div class="step-header">Rule 104: Product categories or general brochure?</div>
-                <div class="path-indicator">
-                    Categories → <span class="outcome website">Website - Index</span><br>
-                    Brochure → <span class="outcome notice">Notice - Brochure</span> (General info about organization/product/service)
                 </div>
             </div>
         </div>
@@ -734,9 +734,9 @@
                     <div class="subcategory website">Fiction</div>
                     <div class="subcategory website">Creative Nonfiction</div>
                     <div class="subcategory website">Index</div>
-                    <div class="subcategory website">Homepage (including About Us pages)</div>
+                    <div class="subcategory website">Homepage</div>
                     <div class="subcategory website">Boilerplate</div>
-                    <div class="subcategory website">Article (including Wikipedia-style articles)</div>
+                    <div class="subcategory website">Article</div>
                 </div>
             </div>
 
